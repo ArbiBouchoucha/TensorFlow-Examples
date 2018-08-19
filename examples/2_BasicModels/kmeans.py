@@ -23,6 +23,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 # Import MNIST data
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=True)
+'''
+Please, note that "one_hot=True" is used here for vector representation, 
+which means that we are writing categorical variables in a one-hot vector format, 
+where the vector is all-zero apart from one element (i.e., creating sparse vectors).
+More infos ca be found here: https://www.quora.com/What-does-the-one_hot-True-parameter-on-the-MNIST-tensorflow-for-beginners-example-mean  
+'''
+
 full_data_x = mnist.train.images
 
 # Parameters
