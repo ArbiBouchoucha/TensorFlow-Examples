@@ -37,7 +37,7 @@ num_steps = 50 # Total steps to train
 batch_size = 1024 # The number of samples per batch
 k = 25 # The number of clusters
 num_classes = 10 # The 10 digits
-num_features = 784 # Each image is 28x28 pixels
+num_features = 784 # Each image is 28x28 pixels ; each pixel is about one feature
 
 # Input images
 X = tf.placeholder(tf.float32, shape=[None, num_features])
@@ -57,6 +57,7 @@ if len(training_graph) > 6: # Tensorflow 1.4+
 else:
     (all_scores, cluster_idx, scores, cluster_centers_initialized,
      init_op, train_op) = training_graph
+
 
 cluster_idx = cluster_idx[0] # fix for cluster_idx being a tuple
 avg_distance = tf.reduce_mean(scores)
@@ -98,3 +99,5 @@ accuracy_op = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 # Test Model
 test_x, test_y = mnist.test.images, mnist.test.labels
 print("Test Accuracy:", sess.run(accuracy_op, feed_dict={X: test_x, Y: test_y}))
+
+
