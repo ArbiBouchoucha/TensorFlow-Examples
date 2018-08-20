@@ -11,10 +11,11 @@ Project: https://github.com/ArbiBouchoucha/TensorFlow-Examples
 '''
 
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from sklearn import datasets
 
 
-# A function to create a neural network model
+# A function to create a neural network (NN) model
 def nn_model(in_data):
     bn = tf.layers.batch_normalization(in_data)
     fc1 = tf.layers.dense(bn, 50)
@@ -24,9 +25,20 @@ def nn_model(in_data):
     return fc3
 
 
+# A function to visualise the (MNIST) images data, after being correctly loaded
+def visualise_image_data(digits):
+    # digits = load_digits()
+    print(digits.data.shape)
+    plt.gray()
+    plt.matshow(digits.images[0])
+    plt.show()
 
-# Load the data
+
+
+# First of all, we load the (MNIST) data
 digits = datasets.load_digits(return_X_y=True)
+
+# visualise_image_data(digits)
 
 # Split into train and validation sets
 train_images = digits[0][:int(len(digits[0]) * 0.8)]
