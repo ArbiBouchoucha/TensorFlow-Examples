@@ -38,6 +38,7 @@ def visualise_image_data(digits):
 # First of all, we load the (MNIST) data
 digits = datasets.load_digits(return_X_y=True)
 
+
 # visualise_image_data(digits)
 
 # Split into train and validation sets
@@ -63,6 +64,15 @@ valid_dataset = tf.data.Dataset.zip((dx_valid, dy_valid)).shuffle(500).repeat().
 
 
 # Create general iterator
+'''
+Now, we want to be able to extract data from either the train_dataset or the valid_dataset seamlessly. 
+This is important, as we don’t want to have to change how data flows through the neural network structure 
+when all we want to do is just change the dataset the model is consuming. 
+To do this, we can use another way of creating the Iterator object – the from_structure() method. 
+This method creates a generic iterator object – all it needs is the data types of the data it will be outputting 
+and the output data size/shape in order to be created. The code below uses this methodology. 
+'''
+
 iterator = tf.data.Iterator.from_structure(train_dataset.output_types, train_dataset.output_shapes)
 next_element = iterator.get_next()
 
