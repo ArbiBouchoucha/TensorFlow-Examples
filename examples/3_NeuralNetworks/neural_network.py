@@ -15,12 +15,13 @@ Project: https://github.com/aymericdamien/TensorFlow-Examples/
 """
 
 from __future__ import print_function
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Import MNIST data
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("/tmp/data/", one_hot=False)
-
-import tensorflow as tf
 
 # Parameters
 learning_rate = 0.1
@@ -58,6 +59,7 @@ def model_fn(features, labels, mode):
     pred_probas = tf.nn.softmax(logits)
 
     # If prediction mode, early return
+    print("mode = ", mode)
     if mode == tf.estimator.ModeKeys.PREDICT:
         return tf.estimator.EstimatorSpec(mode, predictions=pred_classes)
 
@@ -65,8 +67,7 @@ def model_fn(features, labels, mode):
     loss_op = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
         logits=logits, labels=tf.cast(labels, dtype=tf.int32)))
     optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
-    train_op = optimizer.minimize(loss_op,
-                                  global_step=tf.train.get_global_step())
+    train_op = optimizer.minimize(loss_op, global_step=tf.train.get_global_step())
 
     # Evaluate the accuracy of the model
     acc_op = tf.metrics.accuracy(labels=labels, predictions=pred_classes)
@@ -89,6 +90,7 @@ model = tf.estimator.Estimator(model_fn)
 input_fn = tf.estimator.inputs.numpy_input_fn(
     x={'images': mnist.train.images}, y=mnist.train.labels,
     batch_size=batch_size, num_epochs=None, shuffle=True)
+
 # Train the Model
 model.train(input_fn, steps=num_steps)
 
@@ -101,3 +103,22 @@ input_fn = tf.estimator.inputs.numpy_input_fn(
 e = model.evaluate(input_fn)
 
 print("Testing Accuracy:", e['accuracy'])
+
+
+
+
+
+# Predict single images
+n_images = 4
+# Get images from test set
+test_images = mnist.test.images[:n_images]
+# Prepare the input data
+input_fn = tf.estimator.inputs.numpy_input_fn(x={'images': test_images}, shuffle=False)
+# Use the model to predict the images class
+preds = list(model.predict(input_fn))
+
+# Display
+for i in range(n_images):
+    plt.imshow(np.reshape(test_images[i], [28, 28]), cmap='gray')
+    plt.show()
+    print("Model prediction:", preds[i])

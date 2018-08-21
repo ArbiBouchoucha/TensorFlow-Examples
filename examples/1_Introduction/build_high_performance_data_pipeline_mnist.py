@@ -76,6 +76,12 @@ and the output data size/shape in order to be created. The code below uses this 
 iterator = tf.data.Iterator.from_structure(train_dataset.output_types, train_dataset.output_shapes)
 next_element = iterator.get_next()
 
+'''
+Please, note that the next_element operation, because it is operating on the generic iterator 
+which is defined by the shape of the train_dataset, is a tuple – the first element ([0]) will contain 
+the MNIST images, while the second element ([1]) will contain the corresponding labels. 
+'''
+
 # Make datasets that we can initialize separately, but using the same structure via the common iterator
 training_init_op = iterator.make_initializer(train_dataset)
 validation_init_op = iterator.make_initializer(valid_dataset)
